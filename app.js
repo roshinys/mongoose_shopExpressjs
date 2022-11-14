@@ -14,7 +14,7 @@ app.set("views", "views");
 const mongoose = require("mongoose");
 
 //models
-// const User = require("./models/user");
+const User = require("./models/user");
 
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
@@ -22,14 +22,14 @@ const shopRoutes = require("./routes/shop");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
-// app.use((req, res, next) => {
-//   User.findById("6370ab72bebce2bc8640033b")
-//     .then((user) => {
-//       req.user = new User(user.username, user.email, user.cart, user._id);
-//       next();
-//     })
-//     .catch((err) => console.log(err));
-// });
+app.use((req, res, next) => {
+  User.findById("63720f7cdc0016d180aaf4bc")
+    .then((user) => {
+      req.user = user;
+      next();
+    })
+    .catch((err) => console.log(err));
+});
 
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
@@ -38,6 +38,14 @@ app.use(errorController.get404);
 mongoose
   .connect(process.env.MONGO_URL)
   .then(() => {
+    // //creating user
+    // const user = new User({
+    //   username: "user",
+    //   email: "user@gmail.com",
+    //   cart: [],
+    // });
+    // user.save();
+
     app.listen(3000, () => {
       console.log("server started at port 3k");
     });
